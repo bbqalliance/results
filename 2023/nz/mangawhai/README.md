@@ -1,1 +1,0 @@
-# bbq-alliance-results
