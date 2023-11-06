@@ -1,0 +1,509 @@
+
+<html>
+
+<head>
+    <title>Chop Shop (673) Results</title>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        body {
+            font-family: sans-serif;
+            width: 90%;
+            margin: 3ex auto;
+        }
+
+        td.error {
+            color: red;
+        }
+
+        td.warning {
+            color: orange;
+        }
+        table {
+            border-collapse: collapse;
+            border: 1px solid #bbb;
+            margin: 2ex 0;
+        }
+
+        table td,
+        table th {
+            border: 1px solid #bbb;
+            padding: 0.5ex 0.5em;
+        }
+
+        table th {
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        table tr.placed td {
+            background-color: #ffd;
+        }
+
+        th.left,
+        td.left {
+            text-align: left;
+        }
+
+        th.right,
+        td.right {
+            text-align: right;
+        }
+
+        th.centre,
+        td.centre {
+            text-align: center;
+        }
+        p.debug {
+            font-family: monospace;
+            color: grey;
+        }
+
+        table.header {
+            width: 100%;
+            border: none;
+        }
+        table.header td {
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table class="header">
+        <tr>
+            <td style="width: 220px;"><img style="text-align: left;"
+                
+                src="data:image/png;base64,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YXAvMS4wLyIgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bXA6Q3JlYXRlRGF0ZT0iMjAyMC0wMS0xNFQxNDo0MDoxOSsxMDozMCIgeG1wOk1vZGlmeURhdGU9IjIwMjAtMDEtMTRUMTQ6NDQ6MDgrMTA6MzAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMjAtMDEtMTRUMTQ6NDQ6MDgrMTA6MzAiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIyIiBwaG90b3Nob3A6SUNDUHJvZmlsZT0iRGlzcGxheSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo1YjA2MWUxYi0yYzQ3LTQzZTktYWZhMi04NTVhNWVkMzYzNjciIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NWIwNjFlMWItMmM0Ny00M2U5LWFmYTItODU1YTVlZDM2MzY3IiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6NWIwNjFlMWItMmM0Ny00M2U5LWFmYTItODU1YTVlZDM2MzY3Ij4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6NWIwNjFlMWItMmM0Ny00M2U5LWFmYTItODU1YTVlZDM2MzY3IiBzdEV2dDp3aGVuPSIyMDIwLTAxLTE0VDE0OjQ0OjA4KzEwOjMwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgMjEuMCAoTWFjaW50b3NoKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRp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"
+                
+                alt="ABA logo" /></td>
+            <td style="vertical-align: bottom; font-size: 200%;"><b>BBQ Mania</b><br /><span style="font-size: 65%; line-height: 140%;">
+                Claudelands Arena, Hamilton, NZ<br />
+                Sat 28 Oct &mdash; Sat 28 Oct 2023</span></td>
+        </tr>
+    </table>
+    <hr />
+    
+        <p><a href="./overall.htm">Overall</a>
+        
+            <a style="margin-left: 2em;" href="./protein-1.htm">Open Chicken</a>
+        
+            <a style="margin-left: 2em;" href="./protein-2.htm">Ribs</a>
+        
+            <a style="margin-left: 2em;" href="./protein-3.htm">Pork Refined</a>
+        
+            <a style="margin-left: 2em;" href="./protein-4.htm">Brisket</a>
+        
+        </p>
+    
+
+
+
+
+
+<h1>Chop Shop (673)</h1>
+
+
+    
+
+        
+
+        
+
+            
+                
+
+                    <h2>Open Chicken: 271</h2>
+
+                    <table>
+                        <tr>
+                            <th class="left" style="min-width: 6em;">Scoring</th>
+                            <th class="centre" style="min-width: 6em;">Appearance</th>
+                            <th class="centre" style="min-width: 6em;">Texture</th>
+                            <th class="centre" style="min-width: 6em;">Taste</th>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #1</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #2</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #3</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">10</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #4</b></td>
+                            <td class="centre">8</td>
+                            <td class="centre">9</td>
+                            <td class="centre">8</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #5</b></td>
+                            <td class="centre">10</td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #6</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">8</td>
+                        </tr>
+                        
+                        <tr>
+                            
+                            <td class="left"><b>Discard lowest</b></td>
+                            <td class="centre">(8)</td>
+                            <td class="centre">(9)</td>
+                            <td class="centre">(8)</td>
+                            
+                        </tr>
+                        <tr>
+                            <td class="left"><b>Multiplier</b></td>
+                            <td class="centre"><i>&times;1</i></td>
+                            <td class="centre"><i>&times;2</i></td>
+                            <td class="centre"><i>&times;3</i></td>
+                        </tr>
+
+                        <tr>
+                            <th class="left">Weighted Total</th>
+                            <th class="centre">46</th>
+                            <th class="centre">90</th>
+                            <th class="centre">135</th>
+                        </tr>
+            
+                        
+                    </table>
+                
+            
+
+        
+
+    
+
+
+
+    
+
+        
+
+        
+
+            
+                
+
+                    <h2>Ribs: 294</h2>
+
+                    <table>
+                        <tr>
+                            <th class="left" style="min-width: 6em;">Scoring</th>
+                            <th class="centre" style="min-width: 6em;">Appearance</th>
+                            <th class="centre" style="min-width: 6em;">Texture</th>
+                            <th class="centre" style="min-width: 6em;">Taste</th>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #1</b></td>
+                            <td class="centre">8</td>
+                            <td class="centre">9</td>
+                            <td class="centre">10</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #2</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">10</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #3</b></td>
+                            <td class="centre">10</td>
+                            <td class="centre">10</td>
+                            <td class="centre">10</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #4</b></td>
+                            <td class="centre">10</td>
+                            <td class="centre">10</td>
+                            <td class="centre">10</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #5</b></td>
+                            <td class="centre">10</td>
+                            <td class="centre">10</td>
+                            <td class="centre">10</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #6</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">10</td>
+                        </tr>
+                        
+                        <tr>
+                            
+                            <td class="left"><b>Discard lowest</b></td>
+                            <td class="centre">(8)</td>
+                            <td class="centre">(9)</td>
+                            <td class="centre">(10)</td>
+                            
+                        </tr>
+                        <tr>
+                            <td class="left"><b>Multiplier</b></td>
+                            <td class="centre"><i>&times;1</i></td>
+                            <td class="centre"><i>&times;2</i></td>
+                            <td class="centre"><i>&times;3</i></td>
+                        </tr>
+
+                        <tr>
+                            <th class="left">Weighted Total</th>
+                            <th class="centre">48</th>
+                            <th class="centre">96</th>
+                            <th class="centre">150</th>
+                        </tr>
+            
+                        
+                    </table>
+                
+            
+
+        
+
+    
+
+
+
+    
+
+        
+
+        
+
+            
+                
+
+                    <h2>Pork Refined: 272</h2>
+
+                    <table>
+                        <tr>
+                            <th class="left" style="min-width: 6em;">Scoring</th>
+                            <th class="centre" style="min-width: 6em;">Appearance</th>
+                            <th class="centre" style="min-width: 6em;">Texture</th>
+                            <th class="centre" style="min-width: 6em;">Taste</th>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #1</b></td>
+                            <td class="centre">10</td>
+                            <td class="centre">9</td>
+                            <td class="centre">10</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #2</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #3</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #4</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">8</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #5</b></td>
+                            <td class="centre">8</td>
+                            <td class="centre">8</td>
+                            <td class="centre">8</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #6</b></td>
+                            <td class="centre">10</td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                        </tr>
+                        
+                        <tr>
+                            
+                            <td class="left"><b>Discard lowest</b></td>
+                            <td class="centre">(8)</td>
+                            <td class="centre">(8)</td>
+                            <td class="centre">(8)</td>
+                            
+                        </tr>
+                        <tr>
+                            <td class="left"><b>Multiplier</b></td>
+                            <td class="centre"><i>&times;1</i></td>
+                            <td class="centre"><i>&times;2</i></td>
+                            <td class="centre"><i>&times;3</i></td>
+                        </tr>
+
+                        <tr>
+                            <th class="left">Weighted Total</th>
+                            <th class="centre">47</th>
+                            <th class="centre">90</th>
+                            <th class="centre">135</th>
+                        </tr>
+            
+                        
+                    </table>
+                
+            
+
+        
+
+    
+
+
+
+    
+
+        
+
+        
+
+            
+                
+
+                    <h2>Brisket: 251</h2>
+
+                    <table>
+                        <tr>
+                            <th class="left" style="min-width: 6em;">Scoring</th>
+                            <th class="centre" style="min-width: 6em;">Appearance</th>
+                            <th class="centre" style="min-width: 6em;">Texture</th>
+                            <th class="centre" style="min-width: 6em;">Taste</th>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #1</b></td>
+                            <td class="centre">8</td>
+                            <td class="centre">7</td>
+                            <td class="centre">7</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #2</b></td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #3</b></td>
+                            <td class="centre">8</td>
+                            <td class="centre">8</td>
+                            <td class="centre">8</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #4</b></td>
+                            <td class="centre">8</td>
+                            <td class="centre">9</td>
+                            <td class="centre">9</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #5</b></td>
+                            <td class="centre">8</td>
+                            <td class="centre">8</td>
+                            <td class="centre">8</td>
+                        </tr>
+                        
+
+                        <tr>
+                            <td class="left"><b>Portion #6</b></td>
+                            <td class="centre">8</td>
+                            <td class="centre">8</td>
+                            <td class="centre">8</td>
+                        </tr>
+                        
+                        <tr>
+                            
+                            <td class="left"><b>Discard lowest</b></td>
+                            <td class="centre">(8)</td>
+                            <td class="centre">(7)</td>
+                            <td class="centre">(7)</td>
+                            
+                        </tr>
+                        <tr>
+                            <td class="left"><b>Multiplier</b></td>
+                            <td class="centre"><i>&times;1</i></td>
+                            <td class="centre"><i>&times;2</i></td>
+                            <td class="centre"><i>&times;3</i></td>
+                        </tr>
+
+                        <tr>
+                            <th class="left">Weighted Total</th>
+                            <th class="centre">41</th>
+                            <th class="centre">84</th>
+                            <th class="centre">126</th>
+                        </tr>
+            
+                        
+                    </table>
+                
+            
+
+        
+
+    
+
+<hr style="clear: both;" />
+
+<p style="font-size: 75%; color: grey;">Copyright © 2022 Australasian Barbecue Alliance</p>
+</body>
+</html>
